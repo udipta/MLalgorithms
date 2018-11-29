@@ -37,8 +37,6 @@ def compare_the_nearest_cluster(cluster,data):
     return nearest
                   
 
-
-
 def recal_head(cluster):
     for i in range(len(cluster)):
         l1=cluster[i].l

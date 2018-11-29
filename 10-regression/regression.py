@@ -1,11 +1,11 @@
-from math import ceil
+from math import ceil,pi
 import numpy as np
-from scipy import linalg
+from scipy import linalg #linear Algebra
 
 
 def lowess(x, y, f=2./3., iter=3):
     n = len(x)
-    r = int(ceil(f*n))
+    r = ceil(f*n) #rounds up the nearest largest integer
     h = [np.sort(np.abs(x - x[i]))[r] for i in range(n)]
     w = np.clip(np.abs((x[:,None] - x[None,:]) / h), 0.0, 1.0)
     w = (1 - w**3)**3
@@ -28,9 +28,8 @@ def lowess(x, y, f=2./3., iter=3):
     return yest
 
 if __name__ == '__main__':
-    import math
     n = 100
-    x = np.linspace(0, 2 * math.pi, n)
+    x = np.linspace(0, 2 * pi, n)
     print("==========================values of x=====================")
     print(x)
     y = np.sin(x) + 0.3*np.random.randn(n)

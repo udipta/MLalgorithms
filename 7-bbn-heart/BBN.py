@@ -26,7 +26,15 @@ with open('heart_disease_data.csv') as csvfile:
     dataset = list(lines)
     data = []
     for x in dataset:	
-        data.append([ageEnum[x[0]],genderEnum[x[1]],familyHistoryEnum[x[2]],dietEnum[x[3]],lifeStyleEnum[x[4]],cholesterolEnum[x[5]],heartDiseaseEnum[x[6]]])
+        data.append([
+        			ageEnum[x[0]],
+        			genderEnum[x[1]],
+        			familyHistoryEnum[x[2]],
+        			dietEnum[x[3]],
+        			lifeStyleEnum[x[4]],
+        			cholesterolEnum[x[5]],
+        			heartDiseaseEnum[x[6]]
+        		])
 # Training data for machine learning todo: should import from csv
 data = np.array(data)
 N = len(data)
@@ -59,21 +67,50 @@ cholesterol.observe(data[:,5])
 # Prepare nodes and establish edges
 # np.ones(2) ->  HeartDisease has 2 options Yes/No
 # plates(5, 2, 2, 3, 4, 3)  ->  corresponds to options present for domain values 
+
 p_heartdisease = bp.nodes.Dirichlet(np.ones(2), plates=(5, 2, 2, 3, 4, 3))
-heartdisease = bp.nodes.MultiMixture([age, gender, familyhistory, diet, lifestyle, cholesterol], bp.nodes.Categorical, p_heartdisease)
+heartdisease = bp.nodes.MultiMixture([age, gender, familyhistory, diet, lifestyle, cholesterol], 
+								bp.nodes.Categorical, p_heartdisease)
 heartdisease.observe(data[:,6])
 p_heartdisease.update()
 
-# Sample Test with hardcoded values
-#print("Sample Probability")
-#print("Probability(HeartDisease|Age=SuperSeniorCitizen, Gender=Female, FamilyHistory=Yes, DietIntake=Medium, LifeStyle=Sedetary, Cholesterol=High)")
-#print(bp.nodes.MultiMixture([ageEnum['SuperSeniorCitizen'], genderEnum['Female'], familyHistoryEnum['Yes'], dietEnum['Medium'], lifeStyleEnum['Sedetary'], cholesterolEnum['High']], bp.nodes.Categorical, p_heartdisease).get_moments()[0][heartDiseaseEnum['Yes']])
+
+#Sample Test with hardcoded values
+print("Sample Probability")
+
+print("Probability(HeartDisease|Age=SuperSeniorCitizen, Gender=Female, \
+	FamilyHistory=Yes, DietIntake=Medium, LifeStyle=Sedetary, Cholesterol=High)")
+
+print(bp.nodes.MultiMixture([0,1,0,1,3,0],bp.nodes.Categorical, p_heartdisease).get_moments()[0][heartDiseaseEnum['Yes']])
+'''
+print(bp.nodes.MultiMixture([
+								ageEnum['SuperSeniorCitizen'], 
+								genderEnum['Female'], 
+								familyHistoryEnum['Yes'], 
+								dietEnum['Medium'], 
+								lifeStyleEnum['Sedetary'], 
+								cholesterolEnum['High']
+							], 
+							bp.nodes.Categorical, 
+							p_heartdisease
+						).get_moments()[0][heartDiseaseEnum['Yes']])
+
 
 # Interactive Test 
 m = 0
 while m == 0:
     print("\n")
-    res = bp.nodes.MultiMixture([int(input('Enter Age: ' + str(ageEnum))), int(input('Enter Gender: ' + str(genderEnum))), int(input('Enter FamilyHistory: ' + str(familyHistoryEnum))), int(input('Enter dietEnum: ' + str(dietEnum))), int(input('Enter LifeStyle: ' + str(lifeStyleEnum))), int(input('Enter Cholesterol: ' + str(cholesterolEnum)))], bp.nodes.Categorical, p_heartdisease).get_moments()[0][heartDiseaseEnum['Yes']]
+    res = bp.nodes.MultiMixture([int(input('Enter Age: ' + str(ageEnum))),
+    							 int(input('Enter Gender: ' + str(genderEnum))),
+    							 int(input('Enter FamilyHistory: ' + str(familyHistoryEnum))),
+    							 int(input('Enter dietEnum: ' + str(dietEnum))),
+    							 int(input('Enter LifeStyle: ' + str(lifeStyleEnum))),
+    							 int(input('Enter Cholesterol: ' + str(cholesterolEnum)))],
+    							 bp.nodes.Categorical,
+    							 p_heartdisease
+    						).get_moments()[0][heartDiseaseEnum['Yes']]
+    
     print("Probability(HeartDisease) = " +  str(res))
     #print(Style.RESET_ALL)
     m = int(input("Enter for Continue:0, Exit :1  "))
+'''
