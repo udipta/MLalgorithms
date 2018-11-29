@@ -9,10 +9,10 @@ def train(concepts, target):
 			specific_h = concepts[i]
 			
 	for i,h in enumerate(concepts):
-			if target[i] == 'Yes':
-				for x in range(len(specific_h)):
-					if h[x] != specific_h[x]:
-						specific_h[x] = '?'
+		if target[i] == 'Yes':
+			for x in range(len(specific_h)):
+				if h[x] != specific_h[x]:
+					specific_h[x] = '?'
 	
 	return specific_h
 
