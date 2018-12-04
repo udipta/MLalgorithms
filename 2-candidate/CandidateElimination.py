@@ -1,47 +1,28 @@
-import numpy as np
+# same as Find-S algorithm
 import pandas as pd
 
-data=pd.read_csv('Training.csv')
+df = pd.read_csv('train.csv')
 
-concepts = np.array(data.iloc[:,0:-1])
-target = np.array(data.iloc[:,-1])
+spe_df = df.loc[df['EnjoySport'].str.upper()=='YES']
+gene_df = df.loc[df['EnjoySport'].str.upper()=='NO']
 
+spe_df = spe_df.iloc[:,:-1]
+gene_df = gene_df.iloc[:,:-1]
+base = spe_df.iloc[0]
 
-def learn(concepts, target):
-    
-    specific_h = concepts[0]
+for x in range(1,len(spe_df)):
+    base = base.where(spe_df.iloc[x]==base,other='?')
 
-    general_h = [["?" for i in range(len(specific_h))] for i in range(len(specific_h))]
+print('Final Specific :- \n',base.values)
 
-    print("initialization of specific_h and general_h\n")
-    print(specific_h,general_h, sep="\n\n")
+# Elimination of Candidate
+for x in range(len(gene_df)):
+    base = base.where(base!=gene_df.iloc[x] , other='?')
 
-    for i, h in enumerate(concepts):
+print('Final General :-')
 
-        if target[i] == "Yes":
-            for x in range(len(specific_h)):
-
-                # Change values in S & G only if values change
-                if h[x] != specific_h[x]:
-                    specific_h[x] = '?'
-                    general_h[x][x] = '?'
-
-        if target[i] == "No":
-            for x in range(len(specific_h)):
-
-                if h[x] != specific_h[x]:
-                    general_h[x][x] = specific_h[x]
-                else:
-                    general_h[x][x] = '?'
-
-    indices = [i for i, val in enumerate(general_h) if val == ['?', '?', '?', '?', '?', '?']]
-
-    for i in indices:
-
-        general_h.remove(['?', '?', '?', '?', '?', '?'])
-
-    return specific_h, general_h
-    
-s_final, g_final = learn(concepts, target)
-print("\nFinal Specific_h:", s_final, sep="\n")
-print("\nFinal General_h:", g_final, sep="\n")
+for i,x in enumerate(base):
+    if x !='?':
+        l = ['?']*len(base)
+        l[i] = x
+        print(l)

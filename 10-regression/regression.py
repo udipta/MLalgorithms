@@ -2,7 +2,7 @@ from math import ceil,pi
 import numpy as np
 from scipy import linalg #linear Algebra
 
-
+    
 def lowess(x, y, f=2./3., iter=3):
     n = len(x)
     r = ceil(f*n) #rounds up the nearest largest integer
