@@ -22,8 +22,10 @@ def entropy_of_list(a_list):
     return entropy(probs)
 
 print("\n INPUT DATA SET FOR ENTROPY CALCULATION:\n", df_tennis['PlayTennis'])
+
 total_entropy = entropy_of_list(df_tennis['PlayTennis'])
-print("\n Total Entropy of PlayTennis Data Set:",total_entropy)
+
+print("\n Total Entropy of PlayTennis Data Set: ",total_entropy)
 
 def information_gain(df, split_attribute_name, target_attribute_name, trace=0):
     print("Information Gain Calculation of ",split_attribute_name)
@@ -35,10 +37,6 @@ def information_gain(df, split_attribute_name, target_attribute_name, trace=0):
     old_entropy = entropy_of_list(df[target_attribute_name])
     return old_entropy - new_entropy
 
-print('Info-gain for Outlook is :'+str( information_gain(df_tennis, 'Outlook','PlayTennis')),"\n")
-print('\n Info-gain for Humidity is: ' + str( information_gain(df_tennis, 'Humidity','PlayTennis')),"\n")
-print('\n Info-gain for Wind is:' + str( information_gain(df_tennis, 'Wind','PlayTennis')),"\n")
-print('\n Info-gain for Temperature is:' + str( information_gain(df_tennis,'Temperature','PlayTennis')),"\n")
 
 def id3(df, target_attribute_name, attribute_names, default_class=None):
     from collections import Counter
@@ -49,8 +47,7 @@ def id3(df, target_attribute_name, attribute_names, default_class=None):
         return default_class
     else:
         default_class = max(cnt.keys())
-        gainz = [information_gain(df, attr, target_attribute_name) for attr in
-        attribute_names] #
+        gainz = [information_gain(df, attr, target_attribute_name) for attr in attribute_names]
         index_of_max = gainz.index(max(gainz))
         best_attr = attribute_names[index_of_max]
         tree = {best_attr:{}}

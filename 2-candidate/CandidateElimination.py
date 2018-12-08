@@ -1,28 +1,36 @@
-# same as Find-S algorithm
 import pandas as pd
+import numpy as np
+data = pd.read_csv('train.csv')
+concept = np.array(data)[:,:-1]
+target = np.array(data)[:,-1]
 
-df = pd.read_csv('train.csv')
+def train(concept,target):
+    specific_h = concept[0].copy()
+    general_h=[['?' for x in range(len(specific_h))] for x in range(len(specific_h))]
+    
+    for i,h in enumerate(concept):
+        if target[i] == 'yes':
+            for x in range(len(specific_h)):
+                if(h[x] != specific_h[x]):
+                    specific_h[x] = '?'
+                    general_h[x][x] = '?'
+        else:
+            for x in range(len(specific_h)):
+                if h[x] != specific_h[x]:
+                    general_h[x][x] = specific_h[x]
+                else:
+                    general_h[x][x]='?'
+                    
+        print(f"Iteration[{i+1}]")
+        print("Specific: ", specific_h)
+        print("General: ", general_h)
+        print("\n\n")
+    
+    general_h =[general_h[i] for i, val in enumerate(general_h) 
+    								if val!= ['?' for x in range(len(specific_h))]]
+    return specific_h, general_h
 
-spe_df = df.loc[df['EnjoySport'].str.upper()=='YES']
-gene_df = df.loc[df['EnjoySport'].str.upper()=='NO']
-
-spe_df = spe_df.iloc[:,:-1]
-gene_df = gene_df.iloc[:,:-1]
-base = spe_df.iloc[0]
-
-for x in range(1,len(spe_df)):
-    base = base.where(spe_df.iloc[x]==base,other='?')
-
-print('Final Specific :- \n',base.values)
-
-# Elimination of Candidate
-for x in range(len(gene_df)):
-    base = base.where(base!=gene_df.iloc[x] , other='?')
-
-print('Final General :-')
-
-for i,x in enumerate(base):
-    if x !='?':
-        l = ['?']*len(base)
-        l[i] = x
-        print(l)
+specific , general = train(concept,target)
+print("Final hypothesis: ")
+print("Specific hypothesis: ", specific)
+print("General hypothses: ", general)

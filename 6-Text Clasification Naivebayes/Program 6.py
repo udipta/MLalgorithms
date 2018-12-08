@@ -18,7 +18,7 @@ predicted = text_clf.predict(news_test.data)
 from sklearn import metrics
 import numpy as np
 
-print('Accuracy :- ' + str(np.mean(predicted == news_test.target)))
+print('Accuracy :- ', metrics.accuracy_score(predicted, news_test.data))
 
 print(metrics.classification_report(news_test.target, predicted, target_names=news_test.target_names))
 
